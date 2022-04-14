@@ -4,7 +4,7 @@ function countEntrants(entrants) {
   // seu código aqui
 }
 
-function1 calculateEntry(entrants) {
+function calculateEntry(entrants) {
   // seu código 1aqui
 }
 
