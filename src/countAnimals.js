@@ -1,9 +1,9 @@
 // const data = require('../data/zoo_data');
 // const { species } = require('../data/zoo_data');
 
-// function countAnimals(animal) {
-//   if (animal === undefined) {
-
+// function countAnimals(animals) {
+//   if (animals === undefined) {
+//     const animals.reduce((acc, animal) => {});
 //   }
 // }
 
