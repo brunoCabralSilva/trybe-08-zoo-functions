@@ -3,7 +3,6 @@
 
 // function countAnimals(animals) {
 //   if (animals === undefined) {
-//     const animals.reduce((acc, animal) => {});
 //   }
 // }
 
