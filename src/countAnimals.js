@@ -1,11 +1,12 @@
-const data = require('../data/zoo_data');
-const { species } = require('../data/zoo_data');
+// const data = require('../data/zoo_data');
+// const { species } = require('../data/zoo_data');
 
-function countAnimals(animal) {
-  if (animal === undefined) {
-  }
-}
+// function countAnimals(animal) {
+//   if (animal === undefined) {
 
-module.exports = countAnimals;
+//   }
+// }
 
-console.log(countAnimals());
+// module.exports = countAnimals;
+
+// console.log(countAnimals());
