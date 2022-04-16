@@ -4,9 +4,9 @@ const { species } = require('../data/zoo_data');
 function countAnimals(animals) {
   if (animals === undefined) {
     return species.reduce((acc, especie) => {
-    acc[especie.name] = especie.residents.length;
-  return acc;
-    },{});
+      acc[especie.name] = especie.residents.length;
+      return acc;
+    }, {});
   }
   if (Object.keys(animals).length === 1) {
     const encontraAnimal = species.find((especie) => especie.name === Object.values(animals)[0]);
