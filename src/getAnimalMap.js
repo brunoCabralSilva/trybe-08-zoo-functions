@@ -22,32 +22,29 @@ function geraEspecieTodosAnimais(ne, nw, se, sw) {
 }
 
 function filtraNomes(nomeanimal) {
-  const encontraAnimal = species.filter((animals) => animals.name === nomeanimal);
-  return encontraAnimal.map((cadaAnimal) => {
-    const valorResidentes = cadaAnimal.residents;
-    return valorResidentes;
-  });
+  const encontraAnimal = species.find((animals) => animals.name === nomeanimal);
+  const arrayNomes = encontraAnimal.residents.map((cadaAnimal) => cadaAnimal.name);
+  return arrayNomes;
+}
+
+function geraDadosNomes(arrayLocation) {
+  console.log(arrayLocation);
+  const resultado = arrayLocation.reduce((acc, nome) => {
+    acc[nome.name] = filtraNomes(nome.name);
+    return acc;
+  }, {});
+  return resultado;
 }
 
 function geraAnimaisPorNome(ne, nw, se, sw) {
-  const location = {
-    NE: ne.reduce((acc, nome) => {
-      acc[nome.name] = filtraNomes('lions');
-      return acc;
-    }, {}),
-    NW: nw.reduce((acc, nome) => {
-      acc[nome.name] = 2;
-      return acc;
-    }, {}),
-    SE: se.reduce((acc, nome) => {
-      acc[nome.name] = 2;
-      return acc;
-    }, {}),
-    SW: sw.reduce((acc, nome) => {
-      acc[nome.name] = 2;
-      return acc;
-    }, {}),
-  }; return location;
+  const locationNe = geraDadosNomes(ne);
+  const locationNw = geraDadosNomes(nw);
+  const locationSe = geraDadosNomes(se);
+  const locationSw = geraDadosNomes(sw);
+  console.log(locationNe);
+  console.log(locationNw);
+  console.log(locationSe);
+  console.log(locationSw);
 }
 
 function getAnimalMap(options) {
