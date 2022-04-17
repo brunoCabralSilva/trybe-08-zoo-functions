@@ -24,7 +24,8 @@ function geraEspecieTodosAnimais(ne, nw, se, sw) {
 function filtraNomes(nomeanimal) {
   const encontraAnimal = species.filter((animals) => animals.name === nomeanimal);
   return encontraAnimal.map((cadaAnimal) => {
-    return cadaAnimal.residents;
+    const valorResidentes = cadaAnimal.residents;
+    return valorResidentes;
   });
 }
 
