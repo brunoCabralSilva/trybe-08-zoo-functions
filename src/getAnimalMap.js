@@ -1,16 +1,6 @@
 const { species } = require('../data/zoo_data');
 const data = require('../data/zoo_data');
 
-function verificaChave(arrayObject) {
-  const chaveRetornado = Object.keys(arrayObject).some((chave) => chave.includes('includeNames'));
-  return chaveRetornado;
-}
-
-function verificaValor(arrayObject) {
-  const valorRetornado = Object.values(arrayObject).some((valor) => valor === true);
-  return valorRetornado;
-}
-
 function geraEspecieTodosAnimais(ne, nw, se, sw) {
   const location = {
     NE: ne.map((animal) => animal.name),
@@ -21,47 +11,77 @@ function geraEspecieTodosAnimais(ne, nw, se, sw) {
   return location;
 }
 
-function filtraNomes(nomeanimal) {
+function filtraNomes(objeto, nomeanimal) {
   const encontraAnimal = species.find((animals) => animals.name === nomeanimal);
   const arrayNomes = encontraAnimal.residents.map((cadaAnimal) => cadaAnimal.name);
   return arrayNomes;
 }
 
-function geraDadosNomes(arrayLocation) {
-  console.log(arrayLocation);
-  const resultado = arrayLocation.reduce((acc, nome) => {
-    acc[nome.name] = filtraNomes(nome.name);
-    return acc;
-  }, {});
-  return resultado;
+function filtraNomesSexo(objeto, nomeanimal) {
+  const encontraAnimal = species.find((animals) => animals.name === nomeanimal);
+  const sexoEsc = encontraAnimal.residents.filter((sexoAnimal) => sexoAnimal.sex === objeto.sex);
+  const arrayNomes = sexoEsc.map((cadaAnimal) => cadaAnimal.name);
+  return arrayNomes;
 }
 
-function geraAnimaisPorNome(ne, nw, se, sw) {
-  const locationNe = geraDadosNomes(ne);
-  const locationNw = geraDadosNomes(nw);
-  const locationSe = geraDadosNomes(se);
-  const locationSw = geraDadosNomes(sw);
-  console.log(locationNe);
-  console.log(locationNw);
-  console.log(locationSe);
-  console.log(locationSw);
+function verificaIncludeESex(obj, arrayLocation, sorted, includeNames, sex) {
+  if (sex && includeNames) {
+    return arrayLocation.map((nome) => ({
+      [nome.name]: (filtraNomesSexo(obj, nome.name)),
+    }));
+  }
 }
 
-function getAnimalMap(options) {
+function verificaIncludeESorted(obj, arrayLocation, sorted, includeNames, sex) {
+  if (includeNames && Object.keys(obj).length === 1) {
+    return arrayLocation.map((nome) => ({
+      [nome.name]: (filtraNomes(obj, nome.name)),
+    }));
+  }
+  if (sorted && includeNames) {
+    return arrayLocation.map((nome) => ({
+      [nome.name]: (filtraNomes(obj, nome.name)).sort(),
+    }));
+  }
+  return verificaIncludeESex(obj, arrayLocation, sorted, includeNames, sex);
+}
+
+function verificaTresOpcoes(obj, arrayLocation) {
+  const sorted = Object.keys(obj).includes('sorted');
+  const includeNames = Object.keys(obj).includes('includeNames');
+  const sex = Object.keys(obj).includes('sex');
+
+  if (sorted && includeNames && sex) {
+    return arrayLocation.map((nome) => ({
+      [nome.name]: (filtraNomesSexo(obj, nome.name)).sort(),
+    }));
+  }
+  return verificaIncludeESorted(obj, arrayLocation, sorted, includeNames, sex);
+}
+
+function geraAnimaisPorNome(objeto, ne, nw, se, sw) {
+  const locationFinal = {
+    NE: verificaTresOpcoes(objeto, ne),
+    NW: verificaTresOpcoes(objeto, nw),
+    SE: verificaTresOpcoes(objeto, se),
+    SW: verificaTresOpcoes(objeto, sw),
+  };
+  return locationFinal;
+}
+
+function getAnimalMap(op) {
   const ne = species.filter((especie) => especie.location === 'NE');
   const nw = species.filter((especie) => especie.location === 'NW');
   const se = species.filter((especie) => especie.location === 'SE');
   const sw = species.filter((especie) => especie.location === 'SW');
 
-  if (options === undefined) {
+  if (op === undefined || !(Object.keys(op).includes('includeNames'))) {
     return geraEspecieTodosAnimais(ne, nw, se, sw);
   }
-  if (verificaChave(options) && verificaValor(options)) {
-    return geraAnimaisPorNome(ne, nw, se, sw);
-  }
+  return geraAnimaisPorNome(op, ne, nw, se, sw);
 }
 
-const options = { includeNames: true };
+const options = { sorted: 'true' };
 console.log(getAnimalMap(options));
 
 module.exports = getAnimalMap;
