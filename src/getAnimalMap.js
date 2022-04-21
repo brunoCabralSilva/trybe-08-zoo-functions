@@ -81,7 +81,7 @@ function getAnimalMap(op) {
   return geraAnimaisPorNome(op, ne, nw, se, sw);
 }
 
-const options = { sorted: 'true' };
+const options = { includeNames: true, sex: 'female' };
 console.log(getAnimalMap(options));
 
 module.exports = getAnimalMap;

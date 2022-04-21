@@ -3,100 +3,59 @@ const { hours } = require('../data/zoo_data');
 const { species } = require('../data/zoo_data');
 
 const eachSpecie = species.map((animal) => animal.name);
-const eachWeek = ['Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday'];
+const eachWeek = Object.keys(hours);
 
-function listaAnimais(dia) {
+function getExhibition(dia) {
+  if (dia === 'Monday') {
+    return 'The zoo will be closed!';
+  }
   const animaisDoDia = species.filter((animal) => animal.availability.includes(dia));
   const nomeAnimais = animaisDoDia.map((nome) => nome.name);
   return nomeAnimais;
 }
 
-function retornaHorarioDaSemana(semana, dia) {
+function geraFraseHorario(dia) {
   if (dia === 'Monday') {
-    const horarioSemanal = {
-      officeHour: 'CLOSED',
-      exhibition: 'The zoo will be closed!',
+    return 'CLOSED';
+  }
+  return `Open from ${hours[dia].open}am until ${hours[dia].close}pm`;
+}
+
+// https://trybecourse.slack.com/files/U0329SLS2TH/F03CAD3DQP5/gothroughobj.jpg
+
+function retornaAnimaisHorarios() {
+  return eachWeek.reduce((acc, week) => {
+    acc[week] = {
+      officeHour: geraFraseHorario(week),
+      exhibition: getExhibition(week),
     };
-    return horarioSemanal;
-  }
-  const horarioSemanal = {
-    officeHour: `Open from ${semana.open}am until ${semana.close}pm`,
-    exhibition: listaAnimais(dia),
+    return acc;
+  }, {});
+}
+
+function retornaTodosOsDias(scheduleTarget) {
+  const objetoSemana = {
+    [scheduleTarget]: {
+      officeHour: geraFraseHorario(scheduleTarget),
+      exhibition: getExhibition(scheduleTarget),
+    },
   };
-  return horarioSemanal;
+  return objetoSemana;
 }
 
-function diasDoAnimal(animalEscolhido) {
-  const diasAnimalAvaliability = species.find((animal) => animal.name === animalEscolhido);
-  const animalDiasConcluido = diasAnimalAvaliability.availability;
-  return animalDiasConcluido;
-}
-function retorObjetodaSemana3(dias) {
-  if (dias === 'Monday') {
-    const horasSemana = hours.Monday;
-    const retornaObj = { Monday: retornaHorarioDaSemana(horasSemana, dias) };
-    return retornaObj;
-  }
-}
-function retorObjetodaSemana2(dias) {
-  if (dias === 'Friday') {
-    const horasSemana = hours.Friday;
-    const retornaObj = { Friday: retornaHorarioDaSemana(horasSemana, dias) };
-    return retornaObj;
-  }
-
-  if (dias === 'Saturday') {
-    const horasSemana = hours.Saturday;
-    const retornaObj = { Saturday: retornaHorarioDaSemana(horasSemana, dias) };
-    return retornaObj;
-  }
-  if (dias === 'Sunday') {
-    const horasSemana = hours.Sunday;
-    const retornaObj = { Sunday: retornaHorarioDaSemana(horasSemana, dias) };
-    return retornaObj;
-  }
-  return retorObjetodaSemana3(dias);
-}
-
-function retorObjetodaSemana(dias) {
-  if (dias === 'Tuesday') {
-    const horasSemana = hours.Tuesday;
-    const retornaObj = { Tuesday: retornaHorarioDaSemana(horasSemana, dias) };
-    return retornaObj;
-  }
-
-  if (dias === 'Wednesday') {
-    const horasSemana = hours.Wednesday;
-    const retornaObj = { Wednesday: retornaHorarioDaSemana(horasSemana, dias) };
-    return retornaObj;
-  }
-  if (dias === 'Thursday') {
-    const horasSemana = hours.Thursday;
-    const retornaObj = { Thursday: retornaHorarioDaSemana(horasSemana, dias) };
-    return retornaObj;
-  }
-  return retorObjetodaSemana2(dias);
+function retornaDiasDoAnimal(scheduleTarget) {
+  const encontraObjetoAnimal = species.find((nome) => nome.name === scheduleTarget);
+  return encontraObjetoAnimal.availability;
 }
 
 function getSchedule(scheduleTarget) {
-  if (eachSpecie.includes(scheduleTarget)) {
-    return diasDoAnimal(scheduleTarget);
-  }
   if (eachWeek.includes(scheduleTarget)) {
-    return retorObjetodaSemana(scheduleTarget);
+    return retornaTodosOsDias(scheduleTarget);
   }
-  const horarioSemanal = {
-    Tuesday: retornaHorarioDaSemana(hours.Tuesday, 'Tuesday'),
-    Wednesday: retornaHorarioDaSemana(hours.Wednesday, 'Wednesday'),
-    Thursday: retornaHorarioDaSemana(hours.Thursday, 'Thursday'),
-    Friday: retornaHorarioDaSemana(hours.Friday, 'Friday'),
-    Saturday: retornaHorarioDaSemana(hours.Saturday, 'Saturday'),
-    Sunday: retornaHorarioDaSemana(hours.Sunday, 'Sunday'),
-    Monday: retornaHorarioDaSemana(hours.Monday, 'Monday'),
-  };
-  return horarioSemanal;
+  if (eachSpecie.includes(scheduleTarget)) {
+    return retornaDiasDoAnimal(scheduleTarget);
+  }
+  return retornaAnimaisHorarios();
 }
-
-console.log(getSchedule('Thursday'));
 
 module.exports = getSchedule;
